@@ -24,6 +24,6 @@ public class Currency {
 
     @Override
     public String toString() {
-        return code + SPACE + value.toString() + new Date(timestamp);
+        return code + SPACE + value.toString() + SPACE + new Date(timestamp);
     }
 }
