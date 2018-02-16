@@ -1,4 +1,4 @@
-package back.cogni.utils;
+package back.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

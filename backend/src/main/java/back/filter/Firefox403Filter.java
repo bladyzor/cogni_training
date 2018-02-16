@@ -1,4 +1,4 @@
-package back.cogni.filter;
+package back.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

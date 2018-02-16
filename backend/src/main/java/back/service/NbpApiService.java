@@ -1,4 +1,4 @@
-package back.cogni.service;
+package back.service;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +8,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Date;
 
-import static back.cogni.utils.DateUtils.dateToString;
+import static back.utils.DateUtils.dateToString;
 
 public class NbpApiService extends AbstractCacheService<Date, Double> {
 

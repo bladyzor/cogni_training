@@ -1,4 +1,4 @@
-package front.cogni.servlet;
+package front.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

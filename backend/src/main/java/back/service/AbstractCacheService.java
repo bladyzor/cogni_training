@@ -1,4 +1,4 @@
-package back.cogni.service;
+package back.service;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

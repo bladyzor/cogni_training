@@ -1,4 +1,6 @@
-# cogni_training
+# training_project
+
+Jako build artifact dodać "frontend:war exploded".
 
 Implementacja taska 1 z listy znajduje się w folderze task1 w module backend. Nie użyłem klasy Currency do pozostałych tasków, dlatego jest oddzielnie z Runnerem.
 W root'cie znajdują się screeny dotyczące taska 6 - Apache Server.

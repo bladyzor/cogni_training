@@ -1,6 +1,6 @@
-package front.cogni.servlet;
+package front.servlet;
 
-import back.cogni.service.NbpApiService;
+import back.service.NbpApiService;
 import com.google.gson.Gson;
 
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-import static back.cogni.utils.DateUtils.stringToDate;
+import static back.utils.DateUtils.stringToDate;
 
 @WebServlet(name = "myServlet", urlPatterns = {"/euroRate"})
 public class EuroRateAjaxServlet extends HttpServlet {
