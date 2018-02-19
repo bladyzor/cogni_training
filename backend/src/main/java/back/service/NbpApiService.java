@@ -1,58 +1,57 @@
 package back.service;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static back.utils.DateUtils.dateToString;
 
-public class NbpApiService extends AbstractCacheService<Date, Double> {
+public class NbpApiService {
+
+    private CacheService<LocalDate, Double> cacheService;
 
     private static final String NBP_API_EURO_URL = "http://api.nbp.pl/api/exchangerates/rates/a/eur/";
-    private static final String UTF_8_ENCODING = "UTF-8";
     private static final String KEY_RATES = "rates";
     private static final String KEY_MID_RATE = "mid";
 
-    private Double getEuroRateByDate(final Date date) throws IOException {
-        final JSONObject json;
+    public NbpApiService() {
+        this.cacheService = new CacheService<LocalDate, Double>() {
+            @Override
+            protected Double cacheReturnValue(final LocalDate key) {
+                return parseEuroRate(key);
+            }
+        };
+    }
+
+    public Double getEuroRateByDate(final LocalDate date) {
+        return cacheService.getCachedValue(date);
+    }
+
+    private Double parseEuroRate(final LocalDate date) {
+        final JsonElement json;
         final String stringDate = dateToString(date);
 
         try {
             json = readJsonFromUrl(NBP_API_EURO_URL + stringDate);
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             //logger
             return null;
         }
 
-        final JSONObject rates = (JSONObject) json.getJSONArray(KEY_RATES).get(0);
+        final JsonObject rates = ((JsonObject) json).getAsJsonArray(KEY_RATES).get(0).getAsJsonObject();
 
-        return (Double) rates.get(KEY_MID_RATE);
+        return rates.get(KEY_MID_RATE).getAsDouble();
     }
 
-    private JSONObject readJsonFromUrl(final String url) throws IOException, JSONException {
+    private JsonElement readJsonFromUrl(final String url) throws IOException {
         try (InputStream inputStream = new URL(url).openStream()) {
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName(UTF_8_ENCODING)));
-            final String jsonText = readAll(bufferedReader);
-
-            return new JSONObject(jsonText);
+            return new JsonParser().parse(new InputStreamReader(inputStream));
         }
-    }
-
-    private String readAll(final Reader rd) throws IOException {
-        final StringBuilder stringBuilder = new StringBuilder();
-        int line;
-        while ((line = rd.read()) != -1) {
-            stringBuilder.append((char) line);
-        }
-        return stringBuilder.toString();
-    }
-
-    @Override
-    protected Double getCacheValue(final Date date) throws IOException {
-        return getEuroRateByDate(date);
     }
 }

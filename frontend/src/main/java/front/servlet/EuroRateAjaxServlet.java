@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 import static back.utils.DateUtils.stringToDate;
 
@@ -17,6 +18,8 @@ import static back.utils.DateUtils.stringToDate;
 public class EuroRateAjaxServlet extends HttpServlet {
 
     private NbpApiService nbpApiService;
+
+    private static final Gson gson = new Gson();
 
     private static final String MIME_TYPE_APPLICATION_JSON = "application/json";
     private static final String KEY_DATE_PARAM = "date";
@@ -33,28 +36,28 @@ public class EuroRateAjaxServlet extends HttpServlet {
         response.setContentType(MIME_TYPE_APPLICATION_JSON);
 
         final String dateParam = request.getParameter(KEY_DATE_PARAM);
-        Date date = null;
+        LocalDate date = null;
         Double euroRate = null;
         Object result = null;
 
         try {
             date = stringToDate(dateParam);
-            euroRate = nbpApiService.getCachedValue(date);
-        } catch (final ParseException e) {
+            euroRate = nbpApiService.getEuroRateByDate(date);
+        } catch (final DateTimeParseException e) {
             //logger
             result = INCORRECT_INPUT_EXCEPTION_MESSAGE;
         }
 
         if (euroRate != null) {
             result = euroRate;
-        } else if(date != null){
+        } else if(date != null) {
             result = NO_DATA_EXCEPTION_MESSAGE;
         }
 
-        sendAjaxResponse(response, result);
+        sendJsonResponse(response, result);
     }
 
-    private void sendAjaxResponse(final HttpServletResponse response, final Object responseObject) throws IOException {
-        response.getWriter().write(new Gson().toJson(responseObject));
+    private void sendJsonResponse(final HttpServletResponse response, final Object responseObject) throws IOException {
+        response.getWriter().write(gson.toJson(responseObject));
     }
 }

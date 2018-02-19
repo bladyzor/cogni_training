@@ -8,15 +8,15 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractCacheService<KEY, VALUE> {
+public abstract class CacheService<K, V> {
 
-    private LoadingCache<KEY, VALUE> loadingCache;
+    private LoadingCache<K, V> loadingCache;
 
-    public AbstractCacheService() {
-        final CacheLoader<KEY, VALUE> cacheLoader = new CacheLoader<KEY, VALUE>() {
+    public CacheService() {
+        final CacheLoader<K, V> cacheLoader = new CacheLoader<K, V>() {
             @Override
-            public VALUE load(final KEY key) throws IOException {
-                return getCacheValue(key);
+            public V load(final K key) throws IOException {
+                return cacheReturnValue(key);
             }
         };
 
@@ -26,7 +26,7 @@ public abstract class AbstractCacheService<KEY, VALUE> {
                 .build(cacheLoader);
     }
 
-    public VALUE getCachedValue(final KEY key) {
+    public V getCachedValue(final K key) {
         try {
             return loadingCache.get(key);
         } catch (CacheLoader.InvalidCacheLoadException | ExecutionException e) {
@@ -35,5 +35,5 @@ public abstract class AbstractCacheService<KEY, VALUE> {
         }
     }
 
-    protected abstract VALUE getCacheValue(final KEY key) throws IOException;
+    protected abstract V cacheReturnValue(final K key) throws IOException;
 }

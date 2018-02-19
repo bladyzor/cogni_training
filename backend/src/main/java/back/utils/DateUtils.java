@@ -1,19 +1,19 @@
 package back.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class DateUtils {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-    public static String dateToString(final Date date) {
-        return SIMPLE_DATE_FORMAT.format(date);
+    public static String dateToString(final LocalDate date) {
+        return date.format(DATE_TIME_FORMATTER);
     }
 
-    public static Date stringToDate(final String string) throws ParseException {
-        return SIMPLE_DATE_FORMAT.parse(string);
+    public static LocalDate stringToDate(final String string) throws DateTimeParseException {
+        return LocalDate.parse(string, DATE_TIME_FORMATTER);
     }
 }
